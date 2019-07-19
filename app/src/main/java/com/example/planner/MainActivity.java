@@ -7,28 +7,36 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.CalendarView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.applandeo.materialcalendarview.EventDay;
+import com.applandeo.materialcalendarview.listeners.OnDayClickListener;
+
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
     HashMap<Integer, List<String>> events = new HashMap<>();
-
+    private com.applandeo.materialcalendarview.CalendarView calendar;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Button buttonAdd = findViewById(R.id.buttonAdd);
 
         for(int j = 1; j < 31; j++) {
             List<String> tempList = new ArrayList<>();
@@ -37,22 +45,31 @@ public class MainActivity extends AppCompatActivity {
             events.put(j, tempList);
         }
 
+        calendar = findViewById(R.id.calendarView);
 
-
-        CalendarView monthCalendar = (CalendarView)findViewById(R.id.calendarView);
-        monthCalendar.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
+        calendar.setOnDayClickListener(new OnDayClickListener()
+        {
             @Override
-            public void onSelectedDayChange(@NonNull CalendarView view,
-                                            int year,
-                                            int month,
-                                            int dayOfMonth) {
-
-                createDayAdapter(dayOfMonth);
+            public void onDayClick(EventDay eventDay) {
+                Calendar clickedDayCalendar = eventDay.getCalendar();
+                Toast.makeText(getApplicationContext(), clickedDayCalendar.toString(), Toast.LENGTH_LONG).show();
             }
         });
 
 
+
+
+
     }
+
+   /* public void add() {
+
+        List tempList = events.get(day);
+        tempList.add("100");
+        events.put(day, tempList);
+
+        createDayAdapter(day);
+    }*/
 
     private void createDayAdapter(final Integer day) {
         final ListView eventList = (ListView)findViewById(R.id.events);
