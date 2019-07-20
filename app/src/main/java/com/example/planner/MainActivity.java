@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Button buttonAdd = findViewById(R.id.buttonAdd);
+        calendar = findViewById(R.id.calendarView);
 
         for(int j = 1; j < 31; j++) {
             List<String> tempList = new ArrayList<>();
@@ -45,31 +45,16 @@ public class MainActivity extends AppCompatActivity {
             events.put(j, tempList);
         }
 
-        calendar = findViewById(R.id.calendarView);
-
-        calendar.setOnDayClickListener(new OnDayClickListener()
-        {
+        calendar.setOnDayClickListener(new OnDayClickListener() {
             @Override
             public void onDayClick(EventDay eventDay) {
-                Calendar clickedDayCalendar = eventDay.getCalendar();
-                Toast.makeText(getApplicationContext(), clickedDayCalendar.toString(), Toast.LENGTH_LONG).show();
+                Integer clickedDayCalendar = eventDay.getCalendar().get(Calendar.DAY_OF_MONTH);
+                createDayAdapter(clickedDayCalendar);
             }
         });
 
-
-
-
-
     }
 
-   /* public void add() {
-
-        List tempList = events.get(day);
-        tempList.add("100");
-        events.put(day, tempList);
-
-        createDayAdapter(day);
-    }*/
 
     private void createDayAdapter(final Integer day) {
         final ListView eventList = (ListView)findViewById(R.id.events);
@@ -94,9 +79,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
     }
-
-
 
 }
