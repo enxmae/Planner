@@ -1,5 +1,6 @@
 package com.example.planner;
 
+import com.example.planner.repository.EventRepository;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -32,5 +33,8 @@ public class NetworkService {
         return instance;
     }
 
+    public EventRepository getEventRepository() {
+        return retrofit.create(EventRepository.class);
+    }
 
 }

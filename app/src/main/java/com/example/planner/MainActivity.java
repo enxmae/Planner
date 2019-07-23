@@ -1,35 +1,32 @@
 package com.example.planner;
 
-import android.annotation.SuppressLint;
-import android.content.Intent;
-import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.View;
-import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.CalendarView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.applandeo.materialcalendarview.EventDay;
-import com.applandeo.materialcalendarview.listeners.OnDayClickListener;
+import com.example.planner.dao.EventInstance;
+import com.example.planner.dto.EventResponse;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class MainActivity extends AppCompatActivity {
 
     HashMap<Integer, List<String>> events = new HashMap<>();
     private com.applandeo.materialcalendarview.CalendarView calendar;
+    private NetworkService networkService = NetworkService.getInstance();
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -45,12 +42,9 @@ public class MainActivity extends AppCompatActivity {
             events.put(j, tempList);
         }
 
-        calendar.setOnDayClickListener(new OnDayClickListener() {
-            @Override
-            public void onDayClick(EventDay eventDay) {
-                Integer clickedDayCalendar = eventDay.getCalendar().get(Calendar.DAY_OF_MONTH);
-                createDayAdapter(clickedDayCalendar);
-            }
+        calendar.setOnDayClickListener(eventDay -> {
+            Integer clickedDayCalendar = eventDay.getCalendar().get(Calendar.DAY_OF_MONTH);
+            createDayAdapter(clickedDayCalendar);
         });
 
     }
@@ -76,6 +70,29 @@ public class MainActivity extends AppCompatActivity {
                 TextView textView = (TextView)view;
                 textView.setText("1");
 
+            }
+        });
+
+    }
+
+    public void Connect(View view) {
+        Long[] ids = new Long[]{88L};
+
+
+        Call<EventResponse> eventResponseCall = networkService
+                .getEventRepository()
+                .getEventsByIds(ids, "serega_mem");
+
+        eventResponseCall.enqueue(new Callback<EventResponse>() {
+            @Override
+            public void onResponse(Call<EventResponse> call, Response<EventResponse> response) {
+                Toast.makeText(getApplicationContext(),response.body().getData()[0].getName() , Toast.LENGTH_LONG)
+                        .show();
+            }
+
+            @Override
+            public void onFailure(Call<EventResponse> call, Throwable t) {
+                Log.d("!!!!!!!!!!!!!!", t.getMessage());
             }
         });
 

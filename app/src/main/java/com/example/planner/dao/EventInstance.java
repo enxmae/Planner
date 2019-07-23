@@ -1,13 +1,28 @@
 package com.example.planner.dao;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 import java.io.Serializable;
 
 public class EventInstance implements Serializable {
 
-    private Long endedAt;
+    @Expose
+    @SerializedName("started_at")
     private Long startedAt;
+
+    @Expose
+    @SerializedName("ended_at")
+    private Long endedAt;
+
+    @Expose
+    @SerializedName("event_id")
     private Long eventId;
+
+    @Expose
+    @SerializedName("pattern_id")
     private Long patternId;
+
 
     public Long getEndedAt() {
         return endedAt;
