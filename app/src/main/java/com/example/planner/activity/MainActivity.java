@@ -1,5 +1,6 @@
 package com.example.planner.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -98,6 +99,11 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    public void callAddEventActivity(View view) {
+        Intent intent = new Intent(this, AddEnventActivity.class);
+        startActivity(intent);
     }
 
 }
