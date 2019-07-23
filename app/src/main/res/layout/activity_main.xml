@@ -8,6 +8,12 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <Button
+        android:id="@+id/addButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Add" />
+
+    <Button
         android:id="@+id/button2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -25,4 +31,5 @@
         android:id="@+id/events"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
-    </LinearLayout>
+
+</LinearLayout>

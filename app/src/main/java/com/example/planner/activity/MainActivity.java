@@ -1,4 +1,4 @@
-package com.example.planner;
+package com.example.planner.activity;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -10,6 +10,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.planner.NetworkService;
+import com.example.planner.R;
 import com.example.planner.dao.EventInstance;
 import com.example.planner.dto.EventResponse;
 
@@ -75,9 +77,9 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+
     public void Connect(View view) {
         Long[] ids = new Long[]{88L};
-
 
         Call<EventResponse> eventResponseCall = networkService
                 .getEventRepository()

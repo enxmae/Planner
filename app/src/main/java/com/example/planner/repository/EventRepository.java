@@ -14,4 +14,6 @@ public interface EventRepository {
             @Query("id") Long[] ids,
             @Header("X-Firebase-Auth") String userToken);
 
+
+
 }
