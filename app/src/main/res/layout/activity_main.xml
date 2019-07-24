@@ -18,13 +18,13 @@
         android:id="@+id/button2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Button"
+        android:text="Connect"
         android:onClick="Connect"/>
 
     <com.applandeo.materialcalendarview.CalendarView
         android:id="@+id/calendarView"
-        android:layout_width="match_parent"
-        android:layout_height="380dp" >
+        android:layout_width="366dp"
+        android:layout_height="331dp">
 
     </com.applandeo.materialcalendarview.CalendarView>
 
