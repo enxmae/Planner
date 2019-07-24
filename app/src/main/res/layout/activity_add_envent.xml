@@ -11,20 +11,44 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <Button
-            android:id="@+id/addEventButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Button"
-            android:onClick="addEvent"/>
+        <EditText
+            android:id="@+id/eventStatus"
+            android:layout_width="202dp"
+            android:layout_height="60dp"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:text="Status" />
+
+        <EditText
+            android:id="@+id/eventLocation"
+            android:layout_width="198dp"
+            android:layout_height="77dp"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:text="Location" />
 
         <EditText
             android:id="@+id/eventName"
-            android:layout_width="144dp"
+            android:layout_width="198dp"
             android:layout_height="67dp"
             android:ems="10"
             android:inputType="textPersonName"
             android:text="Name" />
+
+        <EditText
+            android:id="@+id/eventDetails"
+            android:layout_width="198dp"
+            android:layout_height="71dp"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:text="Details" />
+
+        <Button
+            android:id="@+id/addEventButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="addEvent"
+            android:text="Button" />
 
     </LinearLayout>
 </android.support.constraint.ConstraintLayout>

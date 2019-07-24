@@ -1,5 +1,7 @@
 package com.example.planner;
 
+import com.example.planner.dao.EventPattern;
+import com.example.planner.repository.EventPatternRepository;
 import com.example.planner.repository.EventRepository;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -35,6 +37,10 @@ public class NetworkService {
 
     public EventRepository getEventRepository() {
         return retrofit.create(EventRepository.class);
+    }
+
+    public EventPatternRepository getEventPatternRepository() {
+        return retrofit.create(EventPatternRepository.class);
     }
 
 }
