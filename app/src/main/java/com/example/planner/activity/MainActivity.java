@@ -36,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
     private NetworkService networkService = NetworkService.getInstance();
 
     private GregorianCalendar gregorianCalendar = new GregorianCalendar();
+    private String userToken = "serega_mem";
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -58,7 +59,6 @@ public class MainActivity extends AppCompatActivity {
         List<String> tempList = Collections.EMPTY_LIST;
         events.put(day, tempList);
 
-
         gregorianCalendar.set(2019, Calendar.JULY, day, 0, 0);
         Long from = gregorianCalendar.getTimeInMillis();
 
@@ -67,16 +67,31 @@ public class MainActivity extends AppCompatActivity {
 
         Call<EventInstanceResponse> eventInstanceResponseCall = networkService
                 .getEventRepository()
-                .getInstances(from, to, "serega_mem");
+                .getInstances(from, to, userToken);
 
         eventInstanceResponseCall.enqueue(new Callback<EventInstanceResponse>() {
             @Override
             public void onResponse(Call<EventInstanceResponse> call, Response<EventInstanceResponse> response) {
 
-                Toast.makeText(getApplicationContext(),
-                        response.body().getData()[1].getEventId().toString() +
-                        response.body().getData()[1].getPatternId().toString(),
-                        Toast.LENGTH_LONG).show();
+                Long[] ids = new Long[]{response.body().getData()[1].getEventId()};
+                networkService.getEventRepository()
+                        .getEventsByIds(ids, userToken)
+                        .enqueue(new Callback<EventResponse>() {
+                    @Override
+                    public void onResponse(Call<EventResponse> call, Response<EventResponse> response) {
+                        Toast.makeText(getApplicationContext(),
+                                response.body().getData()[0].getName(),
+                                Toast.LENGTH_LONG).show();
+                    }
+
+                    @Override
+                    public void onFailure(Call<EventResponse> call, Throwable t) {
+
+                    }
+                });
+
+
+
             }
 
             @Override
