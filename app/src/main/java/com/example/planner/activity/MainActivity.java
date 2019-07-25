@@ -46,23 +46,30 @@ public class MainActivity extends AppCompatActivity {
         calendar = findViewById(R.id.calendarView);
 
         calendar.setOnDayClickListener(eventDay -> {
-            Integer clickedDayCalendar = eventDay.getCalendar().get(Calendar.DAY_OF_MONTH);
-
-            //Toast.makeText(getApplicationContext(),clickedDayCalendar.toString() , Toast.LENGTH_LONG).show();
-            createDayAdapter(clickedDayCalendar);
+            Long mills = eventDay.getCalendar().getTimeInMillis();
+           
+            createDayAdapter(mills);
         });
 
     }
 
 
-    private void createDayAdapter(final Integer day) {
+    private void createDayAdapter(final Long dateMills) {
+
         List<String> tempList = Collections.EMPTY_LIST;
+
+        gregorianCalendar.setTimeInMillis(dateMills);
+
+        Integer year = gregorianCalendar.get(Calendar.YEAR);
+        Integer month = gregorianCalendar.get(Calendar.MONTH);
+        Integer day = gregorianCalendar.get(Calendar.DAY_OF_MONTH);
+
         events.put(day, tempList);
 
-        gregorianCalendar.set(2019, Calendar.JULY, day, 0, 0);
+        gregorianCalendar.set(year, month, day, 0, 0);
         Long from = gregorianCalendar.getTimeInMillis();
 
-        gregorianCalendar.set(2019, Calendar.JULY, day, 23, 59);
+        gregorianCalendar.set(year, month, day, 23, 59);
         Long to = gregorianCalendar.getTimeInMillis();
 
         Call<EventInstanceResponse> eventInstanceResponseCall = networkService
@@ -77,6 +84,7 @@ public class MainActivity extends AppCompatActivity {
                 networkService.getEventRepository()
                         .getEventsByIds(ids, userToken)
                         .enqueue(new Callback<EventResponse>() {
+
                     @Override
                     public void onResponse(Call<EventResponse> call, Response<EventResponse> response) {
                         Toast.makeText(getApplicationContext(),
@@ -89,7 +97,6 @@ public class MainActivity extends AppCompatActivity {
 
                     }
                 });
-
 
 
             }
