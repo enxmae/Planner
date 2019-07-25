@@ -14,10 +14,13 @@ import android.widget.Toast;
 import com.example.planner.NetworkService;
 import com.example.planner.R;
 import com.example.planner.dao.EventInstance;
+import com.example.planner.dto.EventInstanceResponse;
 import com.example.planner.dto.EventResponse;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 
@@ -25,11 +28,14 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+
 public class MainActivity extends AppCompatActivity {
 
     HashMap<Integer, List<String>> events = new HashMap<>();
     private com.applandeo.materialcalendarview.CalendarView calendar;
     private NetworkService networkService = NetworkService.getInstance();
+
+    private GregorianCalendar gregorianCalendar = new GregorianCalendar();
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -38,15 +44,10 @@ public class MainActivity extends AppCompatActivity {
 
         calendar = findViewById(R.id.calendarView);
 
-        for(int j = 1; j < 31; j++) {
-            List<String> tempList = new ArrayList<>();
-            for (Integer i = 0; i < j; i++)
-                tempList.add(i.toString());
-            events.put(j, tempList);
-        }
-
         calendar.setOnDayClickListener(eventDay -> {
             Integer clickedDayCalendar = eventDay.getCalendar().get(Calendar.DAY_OF_MONTH);
+
+            //Toast.makeText(getApplicationContext(),clickedDayCalendar.toString() , Toast.LENGTH_LONG).show();
             createDayAdapter(clickedDayCalendar);
         });
 
@@ -54,6 +55,37 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void createDayAdapter(final Integer day) {
+        List<String> tempList = Collections.EMPTY_LIST;
+        events.put(day, tempList);
+
+
+        gregorianCalendar.set(2019, Calendar.JULY, day, 0, 0);
+        Long from = gregorianCalendar.getTimeInMillis();
+
+        gregorianCalendar.set(2019, Calendar.JULY, day, 23, 59);
+        Long to = gregorianCalendar.getTimeInMillis();
+
+        Call<EventInstanceResponse> eventInstanceResponseCall = networkService
+                .getEventRepository()
+                .getInstances(from, to, "serega_mem");
+
+        eventInstanceResponseCall.enqueue(new Callback<EventInstanceResponse>() {
+            @Override
+            public void onResponse(Call<EventInstanceResponse> call, Response<EventInstanceResponse> response) {
+
+                Toast.makeText(getApplicationContext(),
+                        response.body().getData()[1].getEventId().toString() +
+                        response.body().getData()[1].getPatternId().toString(),
+                        Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void onFailure(Call<EventInstanceResponse> call, Throwable t) {
+
+            }
+        });
+
+
         final ListView eventList = (ListView)findViewById(R.id.events);
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(
@@ -89,13 +121,14 @@ public class MainActivity extends AppCompatActivity {
         eventResponseCall.enqueue(new Callback<EventResponse>() {
             @Override
             public void onResponse(Call<EventResponse> call, Response<EventResponse> response) {
+
                 Toast.makeText(getApplicationContext(),response.body().getData()[0].getName() , Toast.LENGTH_LONG)
                         .show();
             }
 
             @Override
             public void onFailure(Call<EventResponse> call, Throwable t) {
-                Log.d("!!!!!!!!!!!!!!", t.getMessage());
+
             }
         });
 
