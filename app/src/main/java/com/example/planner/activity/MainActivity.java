@@ -126,16 +126,18 @@ public class MainActivity extends AppCompatActivity {
                                     eventInfoTempList.get(i).setEventPattern(eventPattern);
                                 }
 
-
                                 for(int i = 0; i < eventInfoTempList.size(); i++) {
                                     tempList.add(eventInfoTempList.get(i).toString());
                                 }
                                 events.put(day, eventInfoTempList);
 
+
+
+
                                 eventsName.put(day, tempList);
 
                                 ArrayAdapter<String> adapter = new ArrayAdapter<String>(
-                                        getApplicationContext(),
+                                        getBaseContext(),
                                         android.R.layout.simple_list_item_1,
                                         tempList);
 
@@ -180,30 +182,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-
-    public void Connect(View view) {
-        Long[] ids = new Long[]{88L};
-
-        Call<EventResponse> eventResponseCall = networkService
-                .getEventRepository()
-                .getEventsByIds(ids, "serega_mem");
-
-        eventResponseCall.enqueue(new Callback<EventResponse>() {
-            @Override
-            public void onResponse(Call<EventResponse> call, Response<EventResponse> response) {
-
-                Toast.makeText(getApplicationContext(),response.body().getData()[0].getName() , Toast.LENGTH_LONG)
-                        .show();
-            }
-
-            @Override
-            public void onFailure(Call<EventResponse> call, Throwable t) {
-
-            }
-        });
-
-    }
-
+    
     public void callAddEventActivity(View view) {
         Intent intent = new Intent(this, AddEnventActivity.class);
         startActivity(intent);
