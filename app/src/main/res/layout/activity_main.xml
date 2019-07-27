@@ -14,13 +14,6 @@
         android:text="Add Event"
         android:onClick="callAddEventActivity"/>
 
-    <Button
-        android:id="@+id/button2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Connect"
-        android:onClick="Connect"/>
-
     <com.applandeo.materialcalendarview.CalendarView
         android:id="@+id/calendarView"
         android:layout_width="366dp"

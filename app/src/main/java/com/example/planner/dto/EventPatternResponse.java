@@ -1,6 +1,7 @@
 package com.example.planner.dto;
 
 import com.example.planner.dao.EventInstance;
+import com.example.planner.dao.EventPattern;
 import com.google.gson.annotations.Expose;
 
 public class EventPatternResponse {
@@ -9,7 +10,7 @@ public class EventPatternResponse {
     private int count;
 
     @Expose
-    private EventInstance[] data;
+    private EventPattern[] data;
 
     @Expose
     private String message;
@@ -32,11 +33,11 @@ public class EventPatternResponse {
         this.count = count;
     }
 
-    public EventInstance[] getData() {
+    public EventPattern[] getData() {
         return data;
     }
 
-    public void setData(EventInstance[] data) {
+    public void setData(EventPattern[] data) {
         this.data = data;
     }
 
