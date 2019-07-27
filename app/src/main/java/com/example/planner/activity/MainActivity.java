@@ -2,6 +2,7 @@ package com.example.planner.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
@@ -24,7 +25,6 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
-import java.util.regex.Pattern;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -58,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private void createDayAdapter(final Long dateMills) {
+    public void createDayAdapter(final Long dateMills) {
 
         gregorianCalendar.setTimeInMillis(dateMills);
 
@@ -129,11 +129,8 @@ public class MainActivity extends AppCompatActivity {
                                 for(int i = 0; i < eventInfoTempList.size(); i++) {
                                     tempList.add(eventInfoTempList.get(i).toString());
                                 }
+
                                 events.put(day, eventInfoTempList);
-
-
-
-
                                 eventsName.put(day, tempList);
 
                                 ArrayAdapter<String> adapter = new ArrayAdapter<String>(
@@ -151,10 +148,6 @@ public class MainActivity extends AppCompatActivity {
                             }
                         });
 
-
-
-
-
             }
 
             @Override
@@ -169,20 +162,19 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                List tempList = eventsName.get(day);
-                tempList.set(position, "1");
-                eventsName.put(day,tempList);
+                Intent intent = new Intent(getApplicationContext(), EventActionActivity.class);
 
-                TextView textView = (TextView)view;
+                intent.putExtra("eventId", events.get(day).get(position).getEvent().getId().toString());
+                intent.putExtra("patternId", events.get(day).get(position).getEventPattern().getId().toString());
 
-                textView.setText("1");
-
+                startActivity(intent);
+                createDayAdapter(gregorianCalendar.getTimeInMillis());
             }
         });
 
     }
 
-    
+
     public void callAddEventActivity(View view) {
         Intent intent = new Intent(this, AddEnventActivity.class);
         startActivity(intent);

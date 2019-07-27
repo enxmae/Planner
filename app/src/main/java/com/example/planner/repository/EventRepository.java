@@ -8,7 +8,9 @@ import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
+import retrofit2.http.PATCH;
 import retrofit2.http.POST;
+import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface EventRepository {
@@ -30,5 +32,12 @@ public interface EventRepository {
     Call<EventResponse> saveEvent(
             @Body Event event,
             @Header("X-Firebase-Auth") String userToken);
+
+    @PATCH("/api/v1/events/{id}")
+    Call<EventResponse> update(
+            @Path("id") Long id,
+            @Body Event event,
+            @Header("X-Firebase-Auth") String userToken
+    );
 
 }
