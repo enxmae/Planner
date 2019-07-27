@@ -33,8 +33,9 @@ import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
 
-    HashMap<Integer, List<EventFullInformation>> events = new HashMap<>();
-    HashMap<Integer, List<String>> eventsName = new HashMap<>();
+    HashMap<Long, List<EventFullInformation>> events = new HashMap<>();
+    HashMap<Long, List<String>> eventsName = new HashMap<>();
+    private Long eventDateInMills;
 
     private com.applandeo.materialcalendarview.CalendarView calendar;
     private NetworkService networkService = NetworkService.getInstance();
@@ -60,6 +61,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void createDayAdapter(final Long dateMills) {
 
+        eventDateInMills = dateMills;
         gregorianCalendar.setTimeInMillis(dateMills);
 
         Integer year = gregorianCalendar.get(Calendar.YEAR);
@@ -130,8 +132,8 @@ public class MainActivity extends AppCompatActivity {
                                     tempList.add(eventInfoTempList.get(i).toString());
                                 }
 
-                                events.put(day, eventInfoTempList);
-                                eventsName.put(day, tempList);
+                                events.put(eventDateInMills, eventInfoTempList);
+                                eventsName.put(eventDateInMills, tempList);
 
                                 ArrayAdapter<String> adapter = new ArrayAdapter<String>(
                                         getBaseContext(),
@@ -163,8 +165,8 @@ public class MainActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
                 Intent intent = new Intent(getApplicationContext(), EventActionActivity.class);
-                Event event = events.get(day).get(position).getEvent();
-                EventPattern eventPattern = events.get(day).get(position).getEventPattern();
+                Event event = events.get(eventDateInMills).get(position).getEvent();
+                EventPattern eventPattern = events.get(eventDateInMills).get(position).getEventPattern();
 
 
                 intent.putExtra("eventId", event.getId().toString());
@@ -175,6 +177,7 @@ public class MainActivity extends AppCompatActivity {
 
                 startActivity(intent);
 
+                //createDayAdapter(eventDateInMills);
             }
         });
 
