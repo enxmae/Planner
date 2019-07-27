@@ -163,12 +163,18 @@ public class MainActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
                 Intent intent = new Intent(getApplicationContext(), EventActionActivity.class);
+                Event event = events.get(day).get(position).getEvent();
+                EventPattern eventPattern = events.get(day).get(position).getEventPattern();
 
-                intent.putExtra("eventId", events.get(day).get(position).getEvent().getId().toString());
-                intent.putExtra("patternId", events.get(day).get(position).getEventPattern().getId().toString());
+
+                intent.putExtra("eventId", event.getId().toString());
+                intent.putExtra("patternId", eventPattern.getId().toString());
+                intent.putExtra("eventName", event.getName());
+                intent.putExtra("eventDetails", event.getDetails());
+                intent.putExtra("eventStatus", event.getStatus());
 
                 startActivity(intent);
-                createDayAdapter(gregorianCalendar.getTimeInMillis());
+
             }
         });
 

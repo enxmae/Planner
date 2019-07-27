@@ -6,6 +6,7 @@ import com.example.planner.dto.EventResponse;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.PATCH;
@@ -39,5 +40,8 @@ public interface EventRepository {
             @Body Event event,
             @Header("X-Firebase-Auth") String userToken
     );
+
+    @DELETE("/api/v1/events/{id}")
+    Call<Void> delete(@Path("id") Long id, @Header("X-Firebase-Auth") String userToken);
 
 }

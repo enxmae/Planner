@@ -55,6 +55,15 @@ public class EventActionActivity extends AppCompatActivity {
         eventId = Long.parseLong(intent.getStringExtra("eventId"));
         patternId = Long.parseLong(intent.getStringExtra("patternId"));
 
+        eventName = findViewById(R.id.eventName);
+        eventDetails = findViewById(R.id.eventDetails);
+        eventStatus = findViewById(R.id.eventStatus);
+
+        eventName.setText(intent.getStringExtra("eventName"));
+        eventDetails.setText(intent.getStringExtra("eventDetails"));
+        eventStatus.setText(intent.getStringExtra("eventStatus"));
+
+
     }
 
     public void updateEvent(View view) {
@@ -140,4 +149,21 @@ public class EventActionActivity extends AppCompatActivity {
 
     }
 
+    public void deleteEvent(View view) {
+        Call<Void> eventResponseCall = networkService
+                .getEventRepository()
+                .delete(eventId, userToken);
+
+        eventResponseCall.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                finish();
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+
+            }
+        });
+    }
 }
