@@ -6,100 +6,105 @@
     android:layout_height="match_parent"
     tools:context=".activity.AddEnventActivity">
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-
-        <EditText
-            android:id="@+id/eventStatus"
-            android:layout_width="202dp"
-            android:layout_height="60dp"
-            android:ems="10"
-            android:inputType="textPersonName"
-            android:text="Status" />
-
-        <EditText
-            android:id="@+id/eventName"
-            android:layout_width="198dp"
-            android:layout_height="67dp"
-            android:ems="10"
-            android:inputType="textPersonName"
-            android:text="Name" />
-
-        <EditText
-            android:id="@+id/eventDetails"
-            android:layout_width="198dp"
-            android:layout_height="71dp"
-            android:ems="10"
-            android:inputType="textPersonName"
-            android:text="Details" />
-
-        <TextView
-            android:id="@+id/eventStartAt"
-            android:layout_width="205dp"
-            android:layout_height="wrap_content"
-            android:text="Start at" />
-
-
+        android:layout_height="match_parent">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="148dp"
-            android:orientation="horizontal">
-
-            <DatePicker
-                android:id="@+id/eventStartDatePicker"
-                android:layout_width="222dp"
-                android:layout_height="150dp"
-                android:calendarViewShown="false"
-                android:datePickerMode="spinner"
-                tools:datePickerMode="spinner" />
-
-            <TimePicker
-                android:id="@+id/eventStartTimePicker"
-                android:layout_width="match_parent"
-                android:layout_height="150dp"
-                android:calendarViewShown="false"
-                android:timePickerMode="spinner"
-                tools:timePickerMode="spinner" />
-
-        </LinearLayout>
-
-        <TextView
-            android:id="@+id/eventEndAt"
-            android:layout_width="202dp"
             android:layout_height="wrap_content"
-            android:text="End at" />
+            android:orientation="vertical">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="141dp"
-            android:orientation="horizontal">
+            <EditText
+                android:id="@+id/eventStatus"
+                android:layout_width="202dp"
+                android:layout_height="60dp"
+                android:ems="10"
+                android:inputType="textPersonName"
+                android:text="Status" />
 
-            <DatePicker
-                android:id="@+id/eventEndDatePicker"
-                android:layout_width="225dp"
-                android:layout_height="150dp"
-                android:calendarViewShown="false"
-                android:datePickerMode="spinner"
-                tools:datePickerMode="spinner" />
+            <EditText
+                android:id="@+id/eventName"
+                android:layout_width="198dp"
+                android:layout_height="67dp"
+                android:ems="10"
+                android:inputType="textPersonName"
+                android:text="Name" />
 
-            <TimePicker
-                android:id="@+id/eventEndTimePicker"
+            <EditText
+                android:id="@+id/eventDetails"
+                android:layout_width="198dp"
+                android:layout_height="71dp"
+                android:ems="10"
+                android:inputType="textPersonName"
+                android:text="Details" />
+
+            <TextView
+                android:id="@+id/eventStartAt"
+                android:layout_width="205dp"
+                android:layout_height="wrap_content"
+                android:text="Start at" />
+
+
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="150dp"
-                android:calendarViewShown="false"
-                android:timePickerMode="spinner"
-                tools:timePickerMode="spinner" />
+                android:layout_height="148dp"
+                android:orientation="horizontal">
 
+                <DatePicker
+                    android:id="@+id/eventStartDatePicker"
+                    android:layout_width="222dp"
+                    android:layout_height="150dp"
+                    android:calendarViewShown="false"
+                    android:datePickerMode="spinner"
+                    tools:datePickerMode="spinner" />
+
+                <TimePicker
+                    android:id="@+id/eventStartTimePicker"
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp"
+                    android:calendarViewShown="false"
+                    android:timePickerMode="spinner"
+                    tools:timePickerMode="spinner" />
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/eventEndAt"
+                android:layout_width="202dp"
+                android:layout_height="wrap_content"
+                android:text="End at" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="141dp"
+                android:orientation="horizontal">
+
+                <DatePicker
+                    android:id="@+id/eventEndDatePicker"
+                    android:layout_width="225dp"
+                    android:layout_height="150dp"
+                    android:calendarViewShown="false"
+                    android:datePickerMode="spinner"
+                    tools:datePickerMode="spinner" />
+
+                <TimePicker
+                    android:id="@+id/eventEndTimePicker"
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp"
+                    android:calendarViewShown="false"
+                    android:timePickerMode="spinner"
+                    tools:timePickerMode="spinner" />
+
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/addEventButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="addEvent"
+                android:text="Button" />
         </LinearLayout>
+    </ScrollView>
 
-        <Button
-            android:id="@+id/addEventButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:onClick="addEvent"
-            android:text="Button" />
-    </LinearLayout>
 </android.support.constraint.ConstraintLayout>
