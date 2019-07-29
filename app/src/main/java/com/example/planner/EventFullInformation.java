@@ -4,25 +4,25 @@ import com.example.planner.dao.Event;
 import com.example.planner.dao.EventInstance;
 import com.example.planner.dao.EventPattern;
 
+import java.util.Date;
+import java.util.GregorianCalendar;
+
+
 public class EventFullInformation {
     private Event event;
     private EventPattern eventPattern;
     private EventInstance eventInstance;
+    private GregorianCalendar gregorianCalendar = new GregorianCalendar();
+    private Date date;
 
-    public EventFullInformation() {
-
-    }
-
-    public EventFullInformation(Event event
-                         ) {
-
+    public EventFullInformation(Event event) {
         this.event = event;
-
     }
 
     @Override
     public String toString() {
-        return  "Name " + event.getName() + " started at " + eventPattern.getStartedAt();
+        this.date = calculateDate();
+        return  "Name " + event.getName() + " started at " + date;
     }
 
     public Event getEvent() {
@@ -39,5 +39,10 @@ public class EventFullInformation {
 
     public void setEventPattern(EventPattern eventPattern) {
         this.eventPattern = eventPattern;
+    }
+
+    private Date calculateDate() {
+        gregorianCalendar.setTimeInMillis(eventPattern.getStartedAt());
+        return gregorianCalendar.getTime();
     }
 }

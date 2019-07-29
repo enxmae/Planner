@@ -98,12 +98,40 @@
 
             </LinearLayout>
 
+            <RadioGroup
+                android:id="@+id/setFrequencyRG"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/byDayButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Daily" />
+
+                <RadioButton
+                    android:id="@+id/byWeekButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Weekly" />
+
+                <RadioButton
+                    android:id="@+id/byMonthButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Monthly" />
+            </RadioGroup>
+
             <Button
                 android:id="@+id/addEventButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:onClick="addEvent"
-                android:text="Button" />
+                android:text="Add" />
         </LinearLayout>
     </ScrollView>
 
