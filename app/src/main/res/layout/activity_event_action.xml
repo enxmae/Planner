@@ -21,7 +21,7 @@
                 android:layout_height="60dp"
                 android:ems="10"
                 android:inputType="textPersonName"
-                android:text="Status" />
+                android:hint="Status" />
 
             <EditText
                 android:id="@+id/eventName"
@@ -29,7 +29,7 @@
                 android:layout_height="67dp"
                 android:ems="10"
                 android:inputType="textPersonName"
-                android:text="Name" />
+                android:hint="Name" />
 
             <EditText
                 android:id="@+id/eventDetails"
@@ -37,7 +37,7 @@
                 android:layout_height="71dp"
                 android:ems="10"
                 android:inputType="textPersonName"
-                android:text="Details" />
+                android:hint="Details" />
 
             <TextView
                 android:id="@+id/eventStartAt"
@@ -100,6 +100,58 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/eventCount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:inputType="number"
+                    android:hint="count" />
+
+                <EditText
+                    android:id="@+id/eventInterval"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:inputType="number"
+                    android:hint="inteval" />
+            </LinearLayout>
+
+            <RadioGroup
+                android:id="@+id/setFrequencyRG"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/byDayButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Daily" />
+
+                <RadioButton
+                    android:id="@+id/byWeekButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Weekly" />
+
+                <RadioButton
+                    android:id="@+id/byMonthButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Monthly" />
+            </RadioGroup>
+
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="horizontal">
 
@@ -119,8 +171,8 @@
                     android:onClick="updateEvent"
                     android:text="update" />
             </LinearLayout>
-
         </LinearLayout>
     </ScrollView>
 
 </android.support.constraint.ConstraintLayout>
+

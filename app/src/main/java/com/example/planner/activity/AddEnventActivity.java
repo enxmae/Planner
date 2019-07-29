@@ -23,6 +23,7 @@ import com.example.planner.dto.EventResponse;
 import java.text.ParseException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.TimeZone;
@@ -50,6 +51,7 @@ public class AddEnventActivity extends AppCompatActivity {
     private TextView eventDetails;
     private TextView eventStatus;
     private TextView eventInterval;
+    private TextView eventCount;
 
     private DatePicker eventStartDatePicker;
     private DatePicker eventEndDatePicker;
@@ -78,6 +80,7 @@ public class AddEnventActivity extends AppCompatActivity {
         eventDetails = findViewById(R.id.eventDetails);
         eventStatus = findViewById(R.id.eventStatus);
         eventInterval = findViewById(R.id.eventInterval);
+        eventCount = findViewById(R.id.eventCount);
 
         eventStartDatePicker = findViewById(R.id.eventStartDatePicker);
         eventEndDatePicker = findViewById(R.id.eventEndDatePicker);
@@ -129,17 +132,11 @@ public class AddEnventActivity extends AppCompatActivity {
         if(RRule != null) {
             endAt = Long.MAX_VALUE - 1;
 
-            String SRule = "RRULE:" + RRule;
-
+            if(!eventCount.getText().toString().equals("")) {
+                endAt = calculateEndAt(RRule);
+            }
 
         }
-       /*LocalDateIterable localDateIterable = LocalDateIteratorFactory
-                    .createLocalDateIterable(SRule, localDate, true);
-       LocalDateIterator iterator = localDateIterable.iterator();
-        List<String> strings = new ArrayList<>();
-        while(iterator.hasNext())
-            strings.add(iterator.next().toString());
-        Toast.makeText(getApplicationContext(), strings.get(strings.size()-1), Toast.LENGTH_LONG).show();*/
 
         EventPattern eventPattern = new EventPattern(duration,
                 endAt,
@@ -186,11 +183,19 @@ public class AddEnventActivity extends AppCompatActivity {
     private String createRRule() {
         String RRule = "";
         String interval = "INTERVAL=";
+        String count = "COUNT=";
         String intervalCount = "1";
+        String countAmount = "";
 
-        if(eventInterval.getText() != null) {
+
+        if(!eventInterval.getText().toString().equals(""))
             intervalCount = eventInterval.getText().toString();
-        }
+
+        if(!eventCount.getText().toString().equals("")) {
+            countAmount = eventCount.getText().toString();
+            count = count + countAmount + ";";
+        } else count = "";
+
         interval += intervalCount;
 
         if(byDayButton.isChecked()) {
@@ -198,15 +203,30 @@ public class AddEnventActivity extends AppCompatActivity {
         } else if(byWeekButton.isChecked()) {
             RRule += "FREQ=WEEKLY;";
         } else if(byMonthButton.isChecked()) {
-            RRule += "FREQ=MONTHLY";
+            RRule += "FREQ=MONTHLY;";
         } else RRule = null;
 
         if(RRule != null) {
-            RRule += interval;
+            RRule = RRule + count  + interval;
         }
 
         return RRule;
     }
 
 
+    private Long calculateEndAt(String RRule) throws ParseException {
+        String SRule = "RRULE:" + RRule;
+
+        LocalDateIterable localDateIterable = LocalDateIteratorFactory
+                .createLocalDateIterable(SRule, localDate, true);
+
+        LocalDateIterator iterator = localDateIterable.iterator();
+        List<Date> dates = new ArrayList<>();
+        while(iterator.hasNext())
+            dates.add(iterator.next().toDate());
+
+        gregorianCalendar.setTime(dates.get(dates.size()-1));
+
+        return gregorianCalendar.getTimeInMillis();
+    }
 }
