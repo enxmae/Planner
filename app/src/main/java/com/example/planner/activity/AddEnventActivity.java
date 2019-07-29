@@ -1,6 +1,7 @@
 package com.example.planner.activity;
 
 import android.content.Intent;
+import android.speech.tts.TextToSpeech;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -48,6 +49,7 @@ public class AddEnventActivity extends AppCompatActivity {
     private TextView eventName;
     private TextView eventDetails;
     private TextView eventStatus;
+    private TextView eventInterval;
 
     private DatePicker eventStartDatePicker;
     private DatePicker eventEndDatePicker;
@@ -62,6 +64,11 @@ public class AddEnventActivity extends AppCompatActivity {
     private GregorianCalendar gregorianCalendar;
     private org.joda.time.LocalDate localDate;
 
+    private Long startAt;
+    private Long endAt;
+    private Long duration;
+    private String RRule;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,6 +77,7 @@ public class AddEnventActivity extends AppCompatActivity {
         eventName = findViewById(R.id.eventName);
         eventDetails = findViewById(R.id.eventDetails);
         eventStatus = findViewById(R.id.eventStatus);
+        eventInterval = findViewById(R.id.eventInterval);
 
         eventStartDatePicker = findViewById(R.id.eventStartDatePicker);
         eventEndDatePicker = findViewById(R.id.eventEndDatePicker);
@@ -89,11 +97,7 @@ public class AddEnventActivity extends AppCompatActivity {
     public void addEvent(View view) throws ParseException {
 
         gregorianCalendar = new GregorianCalendar();
-
-        Long startAt;
-        Long endAt;
-        Long duration;
-        String RRule = createRRule();
+        RRule = createRRule();
 
         gregorianCalendar.set(
                 eventStartDatePicker.getYear(),
@@ -122,14 +126,16 @@ public class AddEnventActivity extends AppCompatActivity {
 
         duration = endAt - startAt;
 
-        endAt = Long.MAX_VALUE-1;
+        if(RRule != null) {
+            endAt = Long.MAX_VALUE - 1;
 
-        String SRule = "RRULE:" + RRule;
+            String SRule = "RRULE:" + RRule;
 
-        LocalDateIterable localDateIterable = LocalDateIteratorFactory
-                .createLocalDateIterable(SRule, localDate, true);
 
-       /* LocalDateIterator iterator = localDateIterable.iterator();
+        }
+       /*LocalDateIterable localDateIterable = LocalDateIteratorFactory
+                    .createLocalDateIterable(SRule, localDate, true);
+       LocalDateIterator iterator = localDateIterable.iterator();
         List<String> strings = new ArrayList<>();
         while(iterator.hasNext())
             strings.add(iterator.next().toString());
@@ -179,7 +185,13 @@ public class AddEnventActivity extends AppCompatActivity {
 
     private String createRRule() {
         String RRule = "";
-        String interval = "INTERVAL=1";
+        String interval = "INTERVAL=";
+        String intervalCount = "1";
+
+        if(eventInterval.getText() != null) {
+            intervalCount = eventInterval.getText().toString();
+        }
+        interval += intervalCount;
 
         if(byDayButton.isChecked()) {
             RRule += "FREQ=DAILY;";
@@ -187,10 +199,12 @@ public class AddEnventActivity extends AppCompatActivity {
             RRule += "FREQ=WEEKLY;";
         } else if(byMonthButton.isChecked()) {
             RRule += "FREQ=MONTHLY";
+        } else RRule = null;
+
+        if(RRule != null) {
+            RRule += interval;
         }
 
-
-        RRule += interval;
         return RRule;
     }
 
