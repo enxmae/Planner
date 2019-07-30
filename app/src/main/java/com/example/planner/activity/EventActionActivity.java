@@ -17,6 +17,7 @@ import com.example.planner.dto.EventPatternResponse;
 import com.example.planner.dto.EventResponse;
 
 import java.util.GregorianCalendar;
+import java.util.TimeZone;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -113,7 +114,7 @@ public class EventActionActivity extends AppCompatActivity {
                 null,
                 null,
                 startAt,
-                "GMT");
+                TimeZone.getDefault().getID());
 
         Call<EventResponse> eventResponseCall = networkService
                 .getEventRepository()
@@ -165,5 +166,14 @@ public class EventActionActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    public void startShareActivity(View view) {
+        Intent intent = new Intent(getApplicationContext(), ShareActivity.class);
+
+        intent.putExtra("eventId", eventId.toString());
+        intent.putExtra("patternId", patternId.toString());
+
+        startActivity(intent);
     }
 }

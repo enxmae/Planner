@@ -170,7 +170,15 @@
                     android:layout_weight="1"
                     android:onClick="updateEvent"
                     android:text="update" />
+
+                <Button
+                    android:id="@+id/shareEventButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:onClick="startShareActivity"
+                    android:text="Share" />
             </LinearLayout>
+
         </LinearLayout>
     </ScrollView>
 
