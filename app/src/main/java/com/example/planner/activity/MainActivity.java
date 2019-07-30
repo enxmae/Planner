@@ -34,8 +34,8 @@ import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
 
-    HashMap<Long, List<EventFullInformation>> events = new HashMap<>();
-    HashMap<Long, List<String>> eventsName = new HashMap<>();
+    private HashMap<Long, List<EventFullInformation>> events = new HashMap<>();
+    private HashMap<Long, List<String>> eventsName = new HashMap<>();
     private Long eventDateInMills;
 
     private com.applandeo.materialcalendarview.CalendarView calendar;
@@ -160,7 +160,6 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-        //todo edit
         eventList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
