@@ -111,6 +111,41 @@ public class MainActivity extends AppCompatActivity {
 
                             }
 
+                            networkService.getEventPatternRepository()
+                                    .getEventPatterns(ids, userToken)
+                                    .enqueue(new Callback<EventPatternResponse>() {
+
+                                        @Override
+                                        public void onResponse(Call<EventPatternResponse> call,
+                                                               Response<EventPatternResponse> response) {
+                                            if (response.isSuccessful()) {
+                                                for (int i = 0; i < ids.length; i++) {
+                                                    EventPattern eventPattern = response.body().getData()[i];
+                                                    eventInfoTempList.get(i).setEventPattern(eventPattern);
+                                                }
+
+                                                for (int i = 0; i < eventInfoTempList.size(); i++) {
+                                                    tempList.add(eventInfoTempList.get(i).toString());
+                                                }
+
+                                                events.put(eventDateInMills, eventInfoTempList);
+                                                eventsName.put(eventDateInMills, tempList);
+
+                                                ArrayAdapter<String> adapter = new ArrayAdapter<String>(
+                                                        getBaseContext(),
+                                                        android.R.layout.simple_list_item_1,
+                                                        tempList);
+
+                                                eventList.setAdapter(adapter);
+
+                                            }
+                                        }
+                                        @Override
+                                        public void onFailure(Call<EventPatternResponse> call, Throwable t) {
+
+                                        }
+                                    });
+
                         }
 
                         @Override
@@ -119,40 +154,7 @@ public class MainActivity extends AppCompatActivity {
                         }
                     });
 
-            networkService.getEventPatternRepository()
-                    .getEventPatterns(ids, userToken)
-                    .enqueue(new Callback<EventPatternResponse>() {
 
-                        @Override
-                        public void onResponse(Call<EventPatternResponse> call,
-                                               Response<EventPatternResponse> response) {
-                            if (response.isSuccessful() && eventInfoTempList.size() != 0) {
-                                for (int i = 0; i < ids.length; i++) {
-                                    EventPattern eventPattern = response.body().getData()[i];
-                                    eventInfoTempList.get(i).setEventPattern(eventPattern);
-                                }
-
-                                for (int i = 0; i < eventInfoTempList.size(); i++) {
-                                    tempList.add(eventInfoTempList.get(i).toString());
-                                }
-
-                                events.put(eventDateInMills, eventInfoTempList);
-                                eventsName.put(eventDateInMills, tempList);
-
-                                ArrayAdapter<String> adapter = new ArrayAdapter<String>(
-                                        getBaseContext(),
-                                        android.R.layout.simple_list_item_1,
-                                        tempList);
-
-                                eventList.setAdapter(adapter);
-
-                            }
-                        }
-                        @Override
-                        public void onFailure(Call<EventPatternResponse> call, Throwable t) {
-
-                        }
-                    });
 
 
         }

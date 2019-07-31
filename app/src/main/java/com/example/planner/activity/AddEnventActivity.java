@@ -144,14 +144,12 @@ public class AddEnventActivity extends AppCompatActivity {
 
         duration = endAt - startAt;
 
-        if(RRule != null) {
-            endAt = Long.MAX_VALUE - 1;
 
             if(!eventCount.getText().toString().equals("")) {
                 endAt = calculateEndAt(RRule);
             }
 
-        }
+
 
         EventPattern eventPattern = new EventPattern(duration,
                 endAt,
