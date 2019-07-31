@@ -23,6 +23,7 @@ import com.example.planner.dto.EventResponse;
 import java.text.ParseException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
@@ -63,7 +64,7 @@ public class AddEnventActivity extends AppCompatActivity {
     private RadioButton byWeekButton;
     private RadioButton byMonthButton;
 
-    private GregorianCalendar gregorianCalendar;
+    private GregorianCalendar gregorianCalendar = new GregorianCalendar();
     private org.joda.time.LocalDate localDate;
 
     private Long startAt;
@@ -87,6 +88,8 @@ public class AddEnventActivity extends AppCompatActivity {
         eventStartTimePicker = findViewById(R.id.eventStartTimePicker);
         eventEndTimePicker = findViewById(R.id.eventEndTimePicker);
 
+        eventStartDatePicker.updateDate(2019, 6, 29);
+
         setFrequencyRB = findViewById(R.id.setFrequencyRG);
         byDayButton = findViewById(R.id.byDayButton);
         byWeekButton = findViewById(R.id.byWeekButton);
@@ -95,11 +98,23 @@ public class AddEnventActivity extends AppCompatActivity {
         eventStartTimePicker.setIs24HourView(true);
         eventEndTimePicker.setIs24HourView(true);
 
+        Intent intent = getIntent();
+        Long eventDate = Long.parseLong(intent.getStringExtra("date"));
+        gregorianCalendar.setTimeInMillis(eventDate);
+
+        eventStartDatePicker.updateDate(
+                gregorianCalendar.get(Calendar.YEAR),
+                gregorianCalendar.get(Calendar.MONTH),
+                gregorianCalendar.get(Calendar.DAY_OF_MONTH));
+
+        eventEndDatePicker.updateDate(
+                gregorianCalendar.get(Calendar.YEAR),
+                gregorianCalendar.get(Calendar.MONTH),
+                gregorianCalendar.get(Calendar.DAY_OF_MONTH));
     }
 
     public void addEvent(View view) throws ParseException {
 
-        gregorianCalendar = new GregorianCalendar();
         RRule = createRRule();
 
         gregorianCalendar.set(

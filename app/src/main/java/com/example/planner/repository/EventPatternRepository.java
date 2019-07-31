@@ -21,6 +21,11 @@ public interface EventPatternRepository {
             @Header("X-Firebase-Auth") String userToken
     );
 
+    @GET("/api/v1/patterns/{id}")
+    Call<EventPatternResponse> getPatternById(
+            @Path("id") Long id,
+            @Header("X-Firebase-Auth") String userToken
+    );
 
     @POST("/api/v1/patterns")
     Call<EventPatternResponse> savePattern(

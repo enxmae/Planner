@@ -16,6 +16,7 @@ import com.example.planner.dao.EventPattern;
 import com.example.planner.dto.EventPatternResponse;
 import com.example.planner.dto.EventResponse;
 
+import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.TimeZone;
 
@@ -40,7 +41,7 @@ public class EventActionActivity extends AppCompatActivity {
     private TimePicker eventStartTimePicker;
     private TimePicker eventEndTimePicker;
 
-    private GregorianCalendar gregorianCalendar;
+    private GregorianCalendar gregorianCalendar = new GregorianCalendar();
 
     private Long eventId;
     private Long patternId;
@@ -53,21 +54,6 @@ public class EventActionActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
 
-        eventId = Long.parseLong(intent.getStringExtra("eventId"));
-        patternId = Long.parseLong(intent.getStringExtra("patternId"));
-
-        eventName = findViewById(R.id.eventName);
-        eventDetails = findViewById(R.id.eventDetails);
-        eventStatus = findViewById(R.id.eventStatus);
-
-        eventName.setText(intent.getStringExtra("eventName"));
-        eventDetails.setText(intent.getStringExtra("eventDetails"));
-        eventStatus.setText(intent.getStringExtra("eventStatus"));
-
-
-    }
-
-    public void updateEvent(View view) {
         eventName = findViewById(R.id.eventName);
         eventDetails = findViewById(R.id.eventDetails);
         eventStatus = findViewById(R.id.eventStatus);
@@ -77,7 +63,62 @@ public class EventActionActivity extends AppCompatActivity {
         eventStartTimePicker = findViewById(R.id.eventStartTimePicker);
         eventEndTimePicker = findViewById(R.id.eventEndTimePicker);
 
-        gregorianCalendar = new GregorianCalendar();
+        eventStartTimePicker.setIs24HourView(true);
+        eventEndTimePicker.setIs24HourView(true);
+
+        eventId = Long.parseLong(intent.getStringExtra("eventId"));
+        patternId = Long.parseLong(intent.getStringExtra("patternId"));
+        Long eventDate = Long.parseLong(intent.getStringExtra("date"));
+
+        eventName.setText(intent.getStringExtra("eventName"));
+        eventDetails.setText(intent.getStringExtra("eventDetails"));
+        eventStatus.setText(intent.getStringExtra("eventStatus"));
+
+        gregorianCalendar.setTimeInMillis(eventDate);
+        eventStartDatePicker.updateDate(
+                gregorianCalendar.get(Calendar.YEAR),
+                gregorianCalendar.get(Calendar.MONTH),
+                gregorianCalendar.get(Calendar.DAY_OF_MONTH));
+
+        eventEndDatePicker.updateDate(
+                gregorianCalendar.get(Calendar.YEAR),
+                gregorianCalendar.get(Calendar.MONTH),
+                gregorianCalendar.get(Calendar.DAY_OF_MONTH));
+
+
+
+        networkService
+                .getEventPatternRepository()
+                .getPatternById(patternId, userToken)
+                .enqueue(new Callback<EventPatternResponse>() {
+
+            @Override
+            public void onResponse(Call<EventPatternResponse> call,
+                                   Response<EventPatternResponse> response) {
+
+                Long startTime = response.body().getData()[0].getStartedAt();
+                Long endTime = response.body().getData()[0].getEndedAt();
+
+                gregorianCalendar.setTimeInMillis(startTime);
+                eventStartTimePicker.setHour(gregorianCalendar.get(Calendar.HOUR_OF_DAY));
+                eventStartTimePicker.setMinute(gregorianCalendar.get(Calendar.MINUTE));
+
+                gregorianCalendar.setTimeInMillis(endTime);
+                eventEndTimePicker.setHour(gregorianCalendar.get(Calendar.HOUR_OF_DAY));
+                eventEndTimePicker.setMinute(gregorianCalendar.get(Calendar.MINUTE));
+
+            }
+
+            @Override
+            public void onFailure(Call<EventPatternResponse> call, Throwable t) {
+
+            }
+        });
+
+
+    }
+
+    public void updateEvent(View view) {
 
         Long startAt;
         Long endAt;
@@ -130,6 +171,7 @@ public class EventActionActivity extends AppCompatActivity {
                             @Override
                             public void onResponse(Call<EventPatternResponse> call,
                                                    Response<EventPatternResponse> response) {
+
 
                                 finish();
                             }
