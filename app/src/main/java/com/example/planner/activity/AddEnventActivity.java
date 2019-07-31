@@ -147,7 +147,7 @@ public class AddEnventActivity extends AppCompatActivity {
         if(RRule != null) {
             endAt = Long.MAX_VALUE - 1;
 
-            if(eventCount.getText().toString().equals("")) {
+            if(!eventCount.getText().toString().equals("")) {
                 endAt = calculateEndAt(RRule);
             }
 

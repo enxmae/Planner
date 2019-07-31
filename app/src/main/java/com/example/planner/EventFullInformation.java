@@ -4,6 +4,7 @@ import com.example.planner.dao.Event;
 import com.example.planner.dao.EventInstance;
 import com.example.planner.dao.EventPattern;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
@@ -13,7 +14,11 @@ public class EventFullInformation {
     private EventPattern eventPattern;
     private EventInstance eventInstance;
     private GregorianCalendar gregorianCalendar = new GregorianCalendar();
-    private Date date;
+
+    private Integer startAtHour;
+    private Integer startAtMinute;
+    private Integer endAtHour;
+    private Integer endAtMinute;
 
     public EventFullInformation(Event event) {
         this.event = event;
@@ -21,8 +26,11 @@ public class EventFullInformation {
 
     @Override
     public String toString() {
-        this.date = calculateDate();
-        return  "Name " + event.getName() + " started at " + date;
+        calculateDate();
+
+        return  "Name " + event.getName() +
+                " started at " + startAtHour + ":" + startAtMinute +
+                " ended at " + endAtHour + ":" + endAtMinute;
     }
 
     public Event getEvent() {
@@ -41,8 +49,17 @@ public class EventFullInformation {
         this.eventPattern = eventPattern;
     }
 
-    private Date calculateDate() {
+    private void calculateDate() {
         gregorianCalendar.setTimeInMillis(eventPattern.getStartedAt());
-        return gregorianCalendar.getTime();
+
+        startAtHour = gregorianCalendar.get(Calendar.HOUR_OF_DAY);
+        startAtMinute = gregorianCalendar.get(Calendar.MINUTE);
+
+        gregorianCalendar.setTimeInMillis(eventPattern.getEndedAt());
+
+        endAtHour = gregorianCalendar.get(Calendar.HOUR_OF_DAY);
+        endAtMinute = gregorianCalendar.get(Calendar.MINUTE);
+
+
     }
 }
