@@ -59,11 +59,12 @@ public class MainActivity extends AppCompatActivity {
             createDayAdapter(mills);
         });
 
+        eventDateInMills = gregorianCalendar.getTimeInMillis();
     }
 
 
     public void createDayAdapter(final Long dateMills)  {
-try {
+
     eventDateInMills = dateMills;
     gregorianCalendar.setTimeInMillis(dateMills);
 
@@ -125,28 +126,28 @@ try {
                         @Override
                         public void onResponse(Call<EventPatternResponse> call,
                                                Response<EventPatternResponse> response) {
+                            if (response.isSuccessful() && eventInfoTempList.size() != 0) {
+                                for (int i = 0; i < ids.length; i++) {
+                                    EventPattern eventPattern = response.body().getData()[i];
+                                    eventInfoTempList.get(i).setEventPattern(eventPattern);
+                                }
 
-                            for (int i = 0; i < ids.length; i++) {
-                                EventPattern eventPattern = response.body().getData()[i];
-                                eventInfoTempList.get(i).setEventPattern(eventPattern);
+                                for (int i = 0; i < eventInfoTempList.size(); i++) {
+                                    tempList.add(eventInfoTempList.get(i).toString());
+                                }
+
+                                events.put(eventDateInMills, eventInfoTempList);
+                                eventsName.put(eventDateInMills, tempList);
+
+                                ArrayAdapter<String> adapter = new ArrayAdapter<String>(
+                                        getBaseContext(),
+                                        android.R.layout.simple_list_item_1,
+                                        tempList);
+
+                                eventList.setAdapter(adapter);
+
                             }
-
-                            for (int i = 0; i < eventInfoTempList.size(); i++) {
-                                tempList.add(eventInfoTempList.get(i).toString());
-                            }
-
-                            events.put(eventDateInMills, eventInfoTempList);
-                            eventsName.put(eventDateInMills, tempList);
-
-                            ArrayAdapter<String> adapter = new ArrayAdapter<String>(
-                                    getBaseContext(),
-                                    android.R.layout.simple_list_item_1,
-                                    tempList);
-
-                            eventList.setAdapter(adapter);
-
                         }
-
                         @Override
                         public void onFailure(Call<EventPatternResponse> call, Throwable t) {
 
@@ -163,29 +164,25 @@ try {
     });
 
 
-    eventList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+    eventList.setOnItemClickListener((parent, view, position, id) -> {
 
-            Intent intent = new Intent(getApplicationContext(), EventActionActivity.class);
-            Event event = events.get(eventDateInMills).get(position).getEvent();
-            EventPattern eventPattern = events.get(eventDateInMills).get(position).getEventPattern();
+        Intent intent = new Intent(getApplicationContext(), EventActionActivity.class);
+        Event event = events.get(eventDateInMills).get(position).getEvent();
+        EventPattern eventPattern = events.get(eventDateInMills).get(position).getEventPattern();
 
 
-            intent.putExtra("eventId", event.getId().toString());
-            intent.putExtra("patternId", eventPattern.getId().toString());
-            intent.putExtra("eventName", event.getName());
-            intent.putExtra("eventDetails", event.getDetails());
-            intent.putExtra("eventStatus", event.getStatus());
-            intent.putExtra("date", eventDateInMills.toString());
+        intent.putExtra("eventId", event.getId().toString());
+        intent.putExtra("patternId", eventPattern.getId().toString());
+        intent.putExtra("eventName", event.getName());
+        intent.putExtra("eventDetails", event.getDetails());
+        intent.putExtra("eventStatus", event.getStatus());
+        intent.putExtra("date", eventDateInMills.toString());
 
-            startActivity(intent);
-            //createDayAdapter(eventDateInMills);
-        }
+        startActivity(intent);
+
+
     });
-}catch (IndexOutOfBoundsException e) {
-    return;
-}
+
     }
 
 
@@ -201,4 +198,10 @@ try {
 
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        createDayAdapter(eventDateInMills);
+
+    }
 }
