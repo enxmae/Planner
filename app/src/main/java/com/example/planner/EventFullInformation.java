@@ -20,6 +20,11 @@ public class EventFullInformation {
     private Integer endAtHour;
     private Integer endAtMinute;
 
+    private String startAtHourStirng;
+    private String startAtMinuteString;
+    private String endAtHourString;
+    private String endAtMinuteStirng;
+
     public EventFullInformation(Event event) {
         this.event = event;
     }
@@ -29,8 +34,8 @@ public class EventFullInformation {
         calculateDate();
 
         return  "Name " + event.getName() +
-                " started at " + startAtHour + ":" + startAtMinute +
-                " ended at " + endAtHour + ":" + endAtMinute;
+                " started at " + IntToStr(startAtHour) + ":" + IntToStr(startAtMinute) +
+                " ended at " + IntToStr(endAtHour) + ":" + IntToStr(endAtMinute);
     }
 
     public Event getEvent() {
@@ -61,5 +66,12 @@ public class EventFullInformation {
         endAtMinute = gregorianCalendar.get(Calendar.MINUTE);
 
 
+    }
+
+
+    private String IntToStr(Integer value) {
+        String returnValue = value.toString();
+        if(value < 10) returnValue = "0" + returnValue;
+        return returnValue;
     }
 }
