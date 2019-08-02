@@ -55,7 +55,7 @@ public class EventFullInformation {
         startAtHour = gregorianCalendar.get(Calendar.HOUR_OF_DAY);
         startAtMinute = gregorianCalendar.get(Calendar.MINUTE);
 
-        gregorianCalendar.setTimeInMillis(eventPattern.getEndedAt());
+        gregorianCalendar.setTimeInMillis(gregorianCalendar.getTimeInMillis() + eventPattern.getDuration());
 
         endAtHour = gregorianCalendar.get(Calendar.HOUR_OF_DAY);
         endAtMinute = gregorianCalendar.get(Calendar.MINUTE);

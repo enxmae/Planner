@@ -144,12 +144,14 @@ public class AddEnventActivity extends AppCompatActivity {
 
         duration = endAt - startAt;
 
+        if(RRule != null) {
+            endAt = Long.MAX_VALUE - 1;
 
             if(!eventCount.getText().toString().equals("")) {
                 endAt = calculateEndAt(RRule);
             }
 
-
+        }
 
         EventPattern eventPattern = new EventPattern(duration,
                 endAt,
@@ -239,6 +241,11 @@ public class AddEnventActivity extends AppCompatActivity {
             dates.add(iterator.next().toDate());
 
         gregorianCalendar.setTime(dates.get(dates.size()-1));
+        gregorianCalendar.set(gregorianCalendar.get(Calendar.YEAR),
+                gregorianCalendar.get(Calendar.MONTH),
+                gregorianCalendar.get(Calendar.DAY_OF_MONTH),
+                eventEndTimePicker.getHour(),
+                eventEndTimePicker.getMinute());
 
         return gregorianCalendar.getTimeInMillis();
     }

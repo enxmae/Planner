@@ -24,10 +24,16 @@
 
     </com.applandeo.materialcalendarview.CalendarView>
 
+    <TextView
+        android:id="@+id/currentDateTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="" />
+
     <ListView
         android:id="@+id/events"
         android:layout_width="match_parent"
-        android:layout_height="278dp"
+        android:layout_height="397dp"
         android:cacheColorHint="@color/colorAccent" />
 
 

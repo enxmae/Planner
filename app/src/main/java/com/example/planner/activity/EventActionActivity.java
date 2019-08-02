@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
@@ -15,9 +17,16 @@ import com.example.planner.dao.Event;
 import com.example.planner.dao.EventPattern;
 import com.example.planner.dto.EventPatternResponse;
 import com.example.planner.dto.EventResponse;
+import com.google.ical.compat.jodatime.LocalDateIterable;
+import com.google.ical.compat.jodatime.LocalDateIterator;
+import com.google.ical.compat.jodatime.LocalDateIteratorFactory;
 
+import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.List;
 import java.util.TimeZone;
 
 import retrofit2.Call;
@@ -32,6 +41,13 @@ public class EventActionActivity extends AppCompatActivity {
     private TextView eventName;
     private TextView eventDetails;
     private TextView eventStatus;
+    private TextView eventInterval;
+    private TextView eventCount;
+
+    private RadioGroup setFrequencyRB;
+    private RadioButton byDayButton;
+    private RadioButton byWeekButton;
+    private RadioButton byMonthButton;
 
     private Button updateButton;
     private Button deleteButton;
@@ -41,10 +57,13 @@ public class EventActionActivity extends AppCompatActivity {
     private TimePicker eventStartTimePicker;
     private TimePicker eventEndTimePicker;
 
+    private org.joda.time.LocalDate localDate;
+
     private GregorianCalendar gregorianCalendar = new GregorianCalendar();
 
     private Long eventId;
     private Long patternId;
+    private String RRule;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +76,8 @@ public class EventActionActivity extends AppCompatActivity {
         eventName = findViewById(R.id.eventName);
         eventDetails = findViewById(R.id.eventDetails);
         eventStatus = findViewById(R.id.eventStatus);
+        eventInterval = findViewById(R.id.eventInterval);
+        eventCount = findViewById(R.id.eventCount);
 
         eventStartDatePicker = findViewById(R.id.eventStartDatePicker);
         eventEndDatePicker = findViewById(R.id.eventEndDatePicker);
@@ -66,6 +87,11 @@ public class EventActionActivity extends AppCompatActivity {
         eventStartTimePicker.setIs24HourView(true);
         eventEndTimePicker.setIs24HourView(true);
 
+        setFrequencyRB = findViewById(R.id.setFrequencyRG);
+        byDayButton = findViewById(R.id.byDayButton);
+        byWeekButton = findViewById(R.id.byWeekButton);
+        byMonthButton = findViewById(R.id.byMonthButton);
+
         eventId = Long.parseLong(intent.getStringExtra("eventId"));
         patternId = Long.parseLong(intent.getStringExtra("patternId"));
         Long eventDate = Long.parseLong(intent.getStringExtra("date"));
@@ -74,16 +100,6 @@ public class EventActionActivity extends AppCompatActivity {
         eventDetails.setText(intent.getStringExtra("eventDetails"));
         eventStatus.setText(intent.getStringExtra("eventStatus"));
 
-        gregorianCalendar.setTimeInMillis(eventDate);
-        eventStartDatePicker.updateDate(
-                gregorianCalendar.get(Calendar.YEAR),
-                gregorianCalendar.get(Calendar.MONTH),
-                gregorianCalendar.get(Calendar.DAY_OF_MONTH));
-
-        eventEndDatePicker.updateDate(
-                gregorianCalendar.get(Calendar.YEAR),
-                gregorianCalendar.get(Calendar.MONTH),
-                gregorianCalendar.get(Calendar.DAY_OF_MONTH));
 
 
 
@@ -100,10 +116,23 @@ public class EventActionActivity extends AppCompatActivity {
                 Long endTime = response.body().getData()[0].getEndedAt();
 
                 gregorianCalendar.setTimeInMillis(startTime);
+
+                eventStartDatePicker.updateDate(
+                        gregorianCalendar.get(Calendar.YEAR),
+                        gregorianCalendar.get(Calendar.MONTH),
+                        gregorianCalendar.get(Calendar.DAY_OF_MONTH));
+
                 eventStartTimePicker.setHour(gregorianCalendar.get(Calendar.HOUR_OF_DAY));
                 eventStartTimePicker.setMinute(gregorianCalendar.get(Calendar.MINUTE));
 
                 gregorianCalendar.setTimeInMillis(endTime);
+
+                eventEndDatePicker.updateDate(
+                        gregorianCalendar.get(Calendar.YEAR),
+                        gregorianCalendar.get(Calendar.MONTH),
+                        gregorianCalendar.get(Calendar.DAY_OF_MONTH));
+
+
                 eventEndTimePicker.setHour(gregorianCalendar.get(Calendar.HOUR_OF_DAY));
                 eventEndTimePicker.setMinute(gregorianCalendar.get(Calendar.MINUTE));
 
@@ -118,12 +147,13 @@ public class EventActionActivity extends AppCompatActivity {
 
     }
 
-    public void updateEvent(View view) {
+    public void updateEvent(View view) throws ParseException {
 
         Long startAt;
         Long endAt;
         Long duration;
 
+        RRule = createRRule();
         gregorianCalendar.set(
                 eventStartDatePicker.getYear(),
                 eventStartDatePicker.getMonth(),
@@ -132,6 +162,7 @@ public class EventActionActivity extends AppCompatActivity {
                 eventStartTimePicker.getMinute());
 
         startAt = gregorianCalendar.getTimeInMillis();
+        localDate = org.joda.time.LocalDate.fromCalendarFields(gregorianCalendar);
 
         gregorianCalendar.set(
                 eventEndDatePicker.getYear(),
@@ -142,20 +173,27 @@ public class EventActionActivity extends AppCompatActivity {
 
         endAt = gregorianCalendar.getTimeInMillis();
 
-        Event event = new Event(
-                eventDetails.getText().toString(),
-                "Asia/Vladivostok",
-                eventName.getText().toString(),
-                eventStatus.getText().toString());
+        Event event = new Event();
+        event.setName(eventName.getText().toString());
+        event.setDetails(eventDetails.getText().toString());
 
         duration = endAt - startAt;
 
-        EventPattern eventPattern = new EventPattern(duration,
-                endAt,
-                null,
-                null,
-                startAt,
-                TimeZone.getDefault().getID());
+        if(RRule != null) {
+            endAt = 253402300799000L;
+
+            if(!eventCount.getText().toString().equals("")) {
+                endAt = calculateEndAt(RRule);
+            }
+
+        }
+
+        EventPattern eventPattern = new EventPattern();
+        eventPattern.setDuration(duration);
+        eventPattern.setStartedAt(startAt);
+        eventPattern.setEndedAt(endAt);
+        eventPattern.setRrule(RRule);
+        eventPattern.setExrule(null);
 
         Call<EventResponse> eventResponseCall = networkService
                 .getEventRepository()
@@ -217,5 +255,60 @@ public class EventActionActivity extends AppCompatActivity {
         intent.putExtra("patternId", patternId.toString());
 
         startActivity(intent);
+    }
+
+    private String createRRule() {
+        String RRule = "";
+        String interval = "INTERVAL=";
+        String count = "COUNT=";
+        String intervalCount = "1";
+        String countAmount = "";
+
+
+        if(!eventInterval.getText().toString().equals(""))
+            intervalCount = eventInterval.getText().toString();
+
+        if(!eventCount.getText().toString().equals("")) {
+            countAmount = eventCount.getText().toString();
+            count = count + countAmount + ";";
+        } else count = "";
+
+        interval += intervalCount;
+
+        if(byDayButton.isChecked()) {
+            RRule += "FREQ=DAILY;";
+        } else if(byWeekButton.isChecked()) {
+            RRule += "FREQ=WEEKLY;";
+        } else if(byMonthButton.isChecked()) {
+            RRule += "FREQ=MONTHLY;";
+        } else RRule = null;
+
+        if(RRule != null) {
+            RRule = RRule + count  + interval;
+        }
+
+        return RRule;
+    }
+
+
+    private Long calculateEndAt(String RRule) throws ParseException {
+        String SRule = "RRULE:" + RRule;
+
+        LocalDateIterable localDateIterable = LocalDateIteratorFactory
+                .createLocalDateIterable(SRule, localDate, true);
+
+        LocalDateIterator iterator = localDateIterable.iterator();
+        List<Date> dates = new ArrayList<>();
+        while(iterator.hasNext())
+            dates.add(iterator.next().toDate());
+
+        gregorianCalendar.setTime(dates.get(dates.size()-1));
+        gregorianCalendar.set(gregorianCalendar.get(Calendar.YEAR),
+                gregorianCalendar.get(Calendar.MONTH),
+                gregorianCalendar.get(Calendar.DAY_OF_MONTH),
+                eventEndTimePicker.getHour(),
+                eventEndTimePicker.getMinute());
+
+        return gregorianCalendar.getTimeInMillis();
     }
 }

@@ -46,15 +46,23 @@ public class MainActivity extends AppCompatActivity {
     private GregorianCalendar gregorianCalendar = new GregorianCalendar();
     private String userToken = "serega_mem";
 
+    private TextView currentDayTextView;
+
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        currentDayTextView = findViewById(R.id.currentDateTextView);
 
         calendar = findViewById(R.id.calendarView);
 
         calendar.setOnDayClickListener(eventDay -> {
             Long mills = eventDay.getCalendar().getTimeInMillis();
+            gregorianCalendar.setTimeInMillis(mills);
+
+            currentDayTextView.setText(  gregorianCalendar.get(Calendar.DAY_OF_MONTH) + " " +
+                    (gregorianCalendar.get(Calendar.MONTH) + 1) + " " +
+                    gregorianCalendar.get(Calendar.YEAR));
 
             createDayAdapter(mills);
         });
