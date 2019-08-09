@@ -21,6 +21,10 @@ public interface EventRepository {
             @Query("id") Long[] ids,
             @Header("X-Firebase-Auth") String userToken);
 
+    @GET("/api/v1/events/{id}")
+    Call<EventResponse> getEventById(
+            @Path("id") Long id,
+            @Header("X-Firebase-Auth") String userToken);
 
     @GET("/api/v1/events/instances")
     Call<EventInstanceResponse> getInstances(

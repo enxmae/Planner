@@ -12,6 +12,7 @@ import java.util.GregorianCalendar;
 public class EventFullInformation {
     private Event event;
     private EventPattern eventPattern;
+    private Long startedAt;
     private EventInstance eventInstance;
     private GregorianCalendar gregorianCalendar = new GregorianCalendar();
 
@@ -19,11 +20,6 @@ public class EventFullInformation {
     private Integer startAtMinute;
     private Integer endAtHour;
     private Integer endAtMinute;
-
-    private String startAtHourStirng;
-    private String startAtMinuteString;
-    private String endAtHourString;
-    private String endAtMinuteStirng;
 
     public EventFullInformation(Event event) {
         this.event = event;
@@ -48,6 +44,18 @@ public class EventFullInformation {
 
     public EventPattern getEventPattern() {
         return eventPattern;
+    }
+
+    public void setEventInstance(EventInstance eventInstance) {
+        this.eventInstance = eventInstance;
+    }
+
+    public void setStartedAt(Long startedAt) {
+        this.startedAt = startedAt;
+    }
+
+    public Long getStartedAt() {
+        return startedAt;
     }
 
     public void setEventPattern(EventPattern eventPattern) {
