@@ -3,13 +3,15 @@ package com.example.planner;
 import com.example.planner.dao.Event;
 import com.example.planner.dao.EventInstance;
 import com.example.planner.dao.EventPattern;
+import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
 
-public class EventFullInformation {
+public class EventFullInformation implements Serializable {
     private Event event;
     private EventPattern eventPattern;
     private Long startedAt;

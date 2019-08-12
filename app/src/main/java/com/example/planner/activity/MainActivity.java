@@ -26,6 +26,7 @@ import com.example.planner.dto.EventPatternResponse;
 import com.example.planner.dto.EventResponse;
 import com.example.planner.service.EventService;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -42,7 +43,6 @@ import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
     private Long MILLS_IN_DAY = 86400000L;
-    private EventService eventService = new EventService();
 
     private HashMap<Integer,
             HashMap<Integer,
@@ -56,11 +56,14 @@ public class MainActivity extends AppCompatActivity {
     private com.applandeo.materialcalendarview.CalendarView calendar;
     private NetworkService networkService = NetworkService.getInstance();
 
+    private EventService eventService = EventService.getInstance();
+
     private GregorianCalendar gregorianCalendar = new GregorianCalendar();
     private String userToken = "serega_mem";
 
     private TextView currentDayTextView;
     List<EventDay> drawableEvents = new ArrayList<>();
+
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,7 +71,6 @@ public class MainActivity extends AppCompatActivity {
         currentDayTextView = findViewById(R.id.currentDateTextView);
         calendar = findViewById(R.id.calendarView);
 
-        //showMonthEvents();
 
         dispayCurrentDay();
 
@@ -83,16 +85,7 @@ public class MainActivity extends AppCompatActivity {
 
         eventDateInMills = gregorianCalendar.getTimeInMillis();
 
-        eventService.setCurrentDate(eventDateInMills);
 
-        //events = eventService.getEvents();
-
-
-       // while(events.isEmpty()) {
-            //events = eventService.getEvents();
-       // }
-
-       // events.clear();
     }
 
 
@@ -106,7 +99,6 @@ public class MainActivity extends AppCompatActivity {
     Integer day = gregorianCalendar.get(Calendar.DAY_OF_MONTH);
 
     final ListView eventList = (ListView) findViewById(R.id.events);
-
 
     List<EventFullInformation> eventInfoTempList = new ArrayList<>();
 
@@ -197,19 +189,22 @@ public class MainActivity extends AppCompatActivity {
                                                         }
                                                     }
 
-                                                    List<String> tempList = new ArrayList<>();
+                                                    ArrayList<String> tempList = new ArrayList<>();
 
 
                                                     for(int i = 0; i < tempEventInfoList.size(); i++) {
                                                         tempList.add(tempEventInfoList.get(i).toString());
                                                     }
 
-                                                    ArrayAdapter<String> adapter = new ArrayAdapter<String>(
-                                                            getBaseContext(),
-                                                            android.R.layout.simple_list_item_1,
-                                                            tempList);
 
-                                                    eventList.setAdapter(adapter);
+                                                    Intent intent = new Intent(getApplicationContext(),
+                                                            DayActivity.class);
+                                                    Bundle bundle = new Bundle();
+                                                    bundle.putSerializable("tempEventInfoList", (Serializable) tempEventInfoList);
+
+                                                    intent.putExtras(bundle);
+
+                                                    startActivity(intent);
 
                                                 }
                                             }
@@ -242,24 +237,6 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-    eventList.setOnItemClickListener((parent, view, position, id) -> {
-
-        Intent intent = new Intent(getApplicationContext(), EventActionActivity.class);
-        Event event = events.get(year).get(month).get(day).get(position).getEvent();
-        EventPattern eventPattern = events.get(year).get(month).get(day).get(position).getEventPattern();
-
-
-        intent.putExtra("eventId", event.getId().toString());
-        intent.putExtra("patternId", eventPattern.getId().toString());
-        intent.putExtra("eventName", event.getName());
-        intent.putExtra("eventDetails", event.getDetails());
-        intent.putExtra("eventStatus", event.getStatus());
-        intent.putExtra("date", eventDateInMills.toString());
-
-        startActivity(intent);
-
-
-    });
 
     }
 

@@ -94,7 +94,7 @@ public class EventActionActivity extends AppCompatActivity {
 
         eventId = Long.parseLong(intent.getStringExtra("eventId"));
         patternId = Long.parseLong(intent.getStringExtra("patternId"));
-        Long eventDate = Long.parseLong(intent.getStringExtra("date"));
+        //Long eventDate = Long.parseLong(intent.getStringExtra("date"));
 
         eventName.setText(intent.getStringExtra("eventName"));
         eventDetails.setText(intent.getStringExtra("eventDetails"));
