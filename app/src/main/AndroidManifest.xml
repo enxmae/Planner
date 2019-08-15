@@ -11,7 +11,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.DayActivity"></activity>
+        <activity android:name=".activity.WeekActivity"></activity>
+        <activity android:name=".activity.DayActivity" />
         <activity android:name=".activity.ShareActivity" />
         <activity android:name=".activity.EventActionActivity" />
         <activity android:name=".activity.AddEnventActivity" />

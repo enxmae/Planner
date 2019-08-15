@@ -61,30 +61,28 @@ public class MainActivity extends AppCompatActivity {
     private GregorianCalendar gregorianCalendar = new GregorianCalendar();
     private String userToken = "serega_mem";
 
-    private TextView currentDayTextView;
     List<EventDay> drawableEvents = new ArrayList<>();
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        currentDayTextView = findViewById(R.id.currentDateTextView);
+
         calendar = findViewById(R.id.calendarView);
 
-
-        dispayCurrentDay();
 
 
         calendar.setOnDayClickListener(eventDay -> {
             Long mills = eventDay.getCalendar().getTimeInMillis();
             gregorianCalendar.setTimeInMillis(mills);
 
-            dispayCurrentDay();
             createDayAdapter(mills);
+
         });
 
         eventDateInMills = gregorianCalendar.getTimeInMillis();
 
+        createDayAdapter(eventDateInMills);
 
     }
 
@@ -98,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
     Integer month = gregorianCalendar.get(Calendar.MONTH);
     Integer day = gregorianCalendar.get(Calendar.DAY_OF_MONTH);
 
-    final ListView eventList = (ListView) findViewById(R.id.events);
+   // final ListView eventList = (ListView) findViewById(R.id.events);
 
     List<EventFullInformation> eventInfoTempList = new ArrayList<>();
 
@@ -189,19 +187,14 @@ public class MainActivity extends AppCompatActivity {
                                                         }
                                                     }
 
-                                                    ArrayList<String> tempList = new ArrayList<>();
-
-
-                                                    for(int i = 0; i < tempEventInfoList.size(); i++) {
-                                                        tempList.add(tempEventInfoList.get(i).toString());
-                                                    }
 
 
                                                     Intent intent = new Intent(getApplicationContext(),
                                                             DayActivity.class);
                                                     Bundle bundle = new Bundle();
-                                                    bundle.putSerializable("tempEventInfoList", (Serializable) tempEventInfoList);
+                                                    bundle.putSerializable("tempEventInfoList", (Serializable) events);
 
+                                                    intent.putExtra("eventDateInMills", dateMills.toString());
                                                     intent.putExtras(bundle);
 
                                                     startActivity(intent);
@@ -241,13 +234,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    public void callAddEventActivity(View view) {
-        Intent intent = new Intent(this, AddEnventActivity.class);
 
-        intent.putExtra("date", eventDateInMills.toString());
-
-        startActivity(intent);
-    }
 
     private void showMonthEvents() {
         Long mills1 = 1564581600000L;
@@ -269,15 +256,11 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void dispayCurrentDay() {
-        currentDayTextView.setText(  gregorianCalendar.get(Calendar.DAY_OF_MONTH) + " " +
-                (gregorianCalendar.get(Calendar.MONTH) + 1) + " " +
-                gregorianCalendar.get(Calendar.YEAR));
-    }
+
 
     @Override
     protected void onResume() {
-        super.onResume();
+       super.onResume();
        //createDayAdapter(eventDateInMills);
 
     }
@@ -341,6 +324,25 @@ public class MainActivity extends AppCompatActivity {
 
         }
 
+    }
+
+    public void startWeekActivity(View view) {
+        Intent intent = new Intent(getApplicationContext(),
+                WeekActivity.class);
+        Bundle bundle = new Bundle();
+
+        gregorianCalendar.setTimeInMillis(eventDateInMills);
+        Integer year = gregorianCalendar.get(Calendar.YEAR);
+        Integer month = gregorianCalendar.get(Calendar.MONTH);
+        Integer day = gregorianCalendar.get(Calendar.DAY_OF_MONTH);
+
+
+        bundle.putSerializable("tempEventInfoList", (Serializable) events);
+
+        intent.putExtra("eventDateInMills", eventDateInMills.toString());
+        intent.putExtras(bundle);
+
+        startActivity(intent);
     }
 
 }

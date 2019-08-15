@@ -1,5 +1,38 @@
-<ListView android:id="@+id/events"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:cacheColorHint="@color/colorAccent"
-    xmlns:android="http://schemas.android.com/apk/res/android" />
+<android.support.v4.widget.NestedScrollView
+    android:fillViewport="true"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+
+
+    <LinearLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/addEventButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Add Event"
+            android:onClick="callAddEventActivity"/>
+
+        <TextView
+            android:id="@+id/currentDateTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textSize="24dp"/>
+    <LinearLayout
+        android:id="@+id/weekLinearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"/>
+    </LinearLayout>
+
+
+
+</android.support.v4.widget.NestedScrollView>
