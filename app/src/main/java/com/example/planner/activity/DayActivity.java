@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -14,6 +15,8 @@ import com.example.planner.R;
 import com.example.planner.dao.Event;
 import com.example.planner.dao.EventPattern;
 
+import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -21,12 +24,14 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 
+import static java.time.temporal.TemporalAdjusters.previousOrSame;
+
 public class DayActivity extends AppCompatActivity {
 
-
+    HorizontalScrollView HSV;
     private List<HashMap<Integer, List<EventFullInformation>>> sortedEvents = new ArrayList<>();
     private List<List<ListView>> eventsListViews = new ArrayList<>();
-    private List<LinearLayout> linearLayout = new ArrayList<>();
+    private List<LinearLayout> linearLayout = new ArrayList<>(7);
     private List<EventFullInformation> tempEventInfoList;
 
     private LinearLayout weekLinearLayout;
@@ -48,7 +53,8 @@ public class DayActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_day);
-
+        HSV = findViewById(R.id.HSV);
+        HSV.setNestedScrollingEnabled(true);
         currentDayTextView = findViewById(R.id.currentDateTextView);
         weekLinearLayout = findViewById(R.id.weekLinearLayout);
       //  eventList = findViewById(R.id.events);
@@ -69,16 +75,25 @@ public class DayActivity extends AppCompatActivity {
         month = gregorianCalendar.get(Calendar.MONTH);
         day = gregorianCalendar.get(Calendar.DAY_OF_MONTH);
 
-        dispayCurrentDay();
+        calculateFirstDayOfWeek();
 
+        linearLayout.add(findViewById(R.id.line1));
+        linearLayout.add(findViewById(R.id.line2));
+        linearLayout.add(findViewById(R.id.line3));
+        linearLayout.add(findViewById(R.id.line4));
+        linearLayout.add(findViewById(R.id.line5));
+        linearLayout.add(findViewById(R.id.line6));
+        linearLayout.add(findViewById(R.id.line7));
 
+        for(int i = 0; i < 7; i++) {
 
-        for(int i = 0; i < 1; i++) {
             sortedEvents.add(new HashMap<>());
 
-            linearLayout.add(new LinearLayout(this));
             linearLayout.get(i).setOrientation(LinearLayout.VERTICAL);
-            weekLinearLayout.addView(linearLayout.get(i));
+            //weekLinearLayout.addView(linearLayout.get(i));
+            TextView currentDayTextView = new TextView(this);
+            currentDayTextView.setText(dispayCurrentDay());
+            linearLayout.get(i).addView(currentDayTextView);
 
             eventsListViews.add(new ArrayList<>());
 
@@ -101,6 +116,7 @@ public class DayActivity extends AppCompatActivity {
             for(int j = 0; j < sortedEvents.get(dayOfWeek).get(i).size(); j++) {
 
                 tempList.add(sortedEvents.get(dayOfWeek).get(i).get(j).toString());
+
 
                 int finalI = i;
                 eventsListViews.get(dayOfWeek).get(i).setOnItemClickListener((parent, view, position, id) -> {
@@ -176,12 +192,26 @@ public class DayActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    private void dispayCurrentDay() {
+    private String dispayCurrentDay() {
+        gregorianCalendar.set(year, month, day);
+
+        return gregorianCalendar.get(Calendar.DAY_OF_MONTH) + " " +
+                (gregorianCalendar.get(Calendar.MONTH) + 1) + " " +
+                gregorianCalendar.get(Calendar.YEAR);
+    }
+
+    private void calculateFirstDayOfWeek() {
         gregorianCalendar.setTimeInMillis(eventDateInMills);
 
-        currentDayTextView.setText(  gregorianCalendar.get(Calendar.DAY_OF_MONTH) + " " +
-                (gregorianCalendar.get(Calendar.MONTH) + 1) + " " +
-                gregorianCalendar.get(Calendar.YEAR));
+        int dayInWeek = gregorianCalendar.get(Calendar.DAY_OF_WEEK);
+        if(dayInWeek == 1) {
+            dayInWeek = 8;
+        }
+
+        while (dayInWeek > 2) {
+            day -= 1;
+            dayInWeek -= 1;
+        }
     }
 
     @Override
